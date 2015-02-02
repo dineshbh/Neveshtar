@@ -1,7 +1,9 @@
-# Neveshtar - www.neveshtar.com
+# Neveshtar
 Open Source Laravel 5 CMS and Portal
 
 This project is currently in it's early stages. But it will be moving forward very fast and a Beta will be available before the end of February 2015.
+
+# You can check it out live on www.neveshtar.com
 
 Some of it's core features are:
 

@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<title>{{$title}}</title>
 		<link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
 
 		<style>
@@ -27,10 +28,13 @@
 
 			.title {
 				font-size: 96px;
-				margin-bottom: 40px;
+				margin-bottom: 20px;
 			}
 
-			.quote {
+			.quote1 {
+				font-size: 35px;
+			}
+			.quote2 {
 				font-size: 24px;
 			}
 		</style>
@@ -39,7 +43,8 @@
 		<div class="container">
 			<div class="content">
 				<div class="title">Neveshtar.com</div>
-				<div class="quote">{{ Inspiring::quote() }}</div>
+				<div class="quote1">Open Source Laravel 5 Portal / CMS</div>
+				<div class="quote2">{{ Inspiring::quote() }}</div>
 			</div>
 		</div>
 	</body>
