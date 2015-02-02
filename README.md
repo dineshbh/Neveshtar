@@ -28,3 +28,9 @@ Some Possibilities
 
 - Default Zurb Foundation theme
 - Default Zurb Foundation for Apps theme
+- Point of Sale (POS) Module
+
+
+# Installation
+
+- change the env file in the root to your needs
