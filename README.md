@@ -35,4 +35,5 @@ Some Possibilities
 
 # Installation
 
-- change the env file in the root to your needs
+- Check the requirments for Laravel 5 on www.laravel.com
+- Change the env file in the root to your needs

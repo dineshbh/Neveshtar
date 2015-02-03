@@ -1,51 +1,23 @@
-<html>
-	<head>
-		<title>{{$title}}</title>
-		<link href='http://fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+@section('content')
 
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-				color: #ff7620;
-				display: table;
-				font-weight: 100;
-				font-family: 'Lato';
-			}
+<!-- Example row of columns -->
+<div class="row">
+<div class="col-md-4">
+  <h2>Heading</h2>
+  <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+  <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+</div>
+<div class="col-md-4">
+  <h2>Heading</h2>
+  <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+  <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+</div>
+<div class="col-md-4">
+  <h2>Heading</h2>
+  <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+  <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+</div>
 
-			.container {
-				text-align: center;
-				display: table-cell;
-				vertical-align: middle;
-			}
+@endsection
 
-			.content {
-				text-align: center;
-				display: inline-block;
-			}
-
-			.title {
-				font-size: 96px;
-				margin-bottom: 20px;
-			}
-
-			.quote1 {
-				font-size: 35px;
-			}
-			.quote2 {
-				font-size: 24px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="content">
-				<div class="title">Neveshtar.com</div>
-				<div class="quote1">Open Source Laravel 5 Portal / CMS</div>
-				<div class="quote2">{{ Inspiring::quote() }}</div>
-			</div>
-		</div>
-	</body>
-</html>
+@component_app($title)
