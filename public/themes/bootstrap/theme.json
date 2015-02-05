@@ -1,0 +1,8 @@
+{
+    "slug": "bootstrap",
+    "name": "Neveshtar Bootstrap Theme",
+    "author": "Hossein Jabbari",
+    "description": "This is the default theme for the Neveshtar Project.",
+    "version": "1.0.0",
+    "folder": "/themes/bootstrap/"
+}
