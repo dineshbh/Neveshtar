@@ -1,4 +1,5 @@
 @section('content')
+	SALAM
     <!-- BEGIN SLIDER -->
     <div class="page-slider margin-bottom-40">
       <div class="fullwidthbanner-container revolution-slider">
