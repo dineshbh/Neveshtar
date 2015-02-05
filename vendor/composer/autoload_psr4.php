@@ -13,5 +13,6 @@ return array(
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
     'Illuminate\\' => array($vendorDir . '/laravel/framework/src/Illuminate'),
     'ClassPreloader\\' => array($vendorDir . '/classpreloader/classpreloader/src'),
+    'Caffeinated\\Themes\\' => array($vendorDir . '/caffeinated/themes/src/Caffeinated/Themes'),
     'App\\' => array($baseDir . '/app'),
 );

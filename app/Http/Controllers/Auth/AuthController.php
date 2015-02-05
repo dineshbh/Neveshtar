@@ -5,6 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use View;
+use Theme;
 
 class AuthController extends Controller {
 
@@ -21,6 +22,11 @@ class AuthController extends Controller {
 
 	use AuthenticatesAndRegistersUsers;
 
+	public function getLogin()
+	{
+		return Theme::view('admin/login_soft');
+	}
+
 	/**
 	 * Create a new authentication controller instance.
 	 *
@@ -32,7 +38,8 @@ class AuthController extends Controller {
 	{
 		$this->auth = $auth;
 		$this->registrar = $registrar;
-		View::share('title','Neveshtar - Open Source Laravel CMS');
+
+		View::share('title','Login');
 
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}

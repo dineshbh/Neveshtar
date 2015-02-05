@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
-use Theme;
 
 trait AuthenticatesAndRegistersUsers {
 
@@ -28,7 +27,7 @@ trait AuthenticatesAndRegistersUsers {
 	 */
 	public function getRegister()
 	{
-		return Theme::view('auth.register');
+		return view('auth.register');
 	}
 
 	/**
@@ -60,7 +59,7 @@ trait AuthenticatesAndRegistersUsers {
 	 */
 	public function getLogin()
 	{
-		return Theme::view('auth.login');
+		return view('auth.login');
 	}
 
 	/**

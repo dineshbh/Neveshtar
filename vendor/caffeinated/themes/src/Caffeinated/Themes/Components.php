@@ -2,9 +2,9 @@
 namespace Caffeinated\Themes;
 
 use Closure;
-use Illuminate\Support\Str;
-use Illuminate\Container\Container;
 use Caffeinated\Themes\Engines\Engine;
+use Illuminate\Container\Container;
+use Illuminate\View\Compilers\BladeCompiler;
 
 class Components
 {
@@ -12,6 +12,11 @@ class Components
 	 * @var Container
 	 */
 	protected $container;
+
+	/**
+	 * @var BladeCompiler
+	 */
+	protected $blade;
 
 	/**
 	 * @var Engine
@@ -31,20 +36,20 @@ class Components
 	/**
 	 * Constructor method.
 	 *
-	 * @param BladeCompiler $blade
 	 * @param Container     $container
+	 * @param BladeCompiler $blade
 	 */
-	public function __construct(Container $container, Engine $engine)
+	public function __construct(Container $container, BladeCompiler $blade)
 	{
 		$this->container = $container;
-		$this->engine    = $engine;
+		$this->blade     = $blade;
 	}
 
 	/**
 	 * Register a new component.
 	 *
-	 * @param  string         $name
-	 * @param  strin|callable $callback
+	 * @param  string          $name
+	 * @param  string|callable $callback
 	 * @return void
 	 */
 	public function register($name, $callback)
@@ -57,12 +62,19 @@ class Components
 	/**
 	 * Register Blade syntax for a specific component.
 	 *
-	 * @param  string $name
+	 * @param  string $method
+	 * @param  string $namespace
 	 * @return void
 	 */
 	protected function registerTag($method, $namespace = '')
 	{
-		return $this->engine->registerCustomTag($method, $namespace);
+		$this->blade->extend(function($view, $compiler) use ($method, $namespace) {
+			$pattern = $compiler->createMatcher('component_'.$method);
+
+			$replace = '$1<?php echo '.$namespace.$method.'$2; ?>';
+
+			return preg_replace($pattern, $replace, $view);
+		});
 	}
 
 	/**
@@ -170,7 +182,7 @@ class Components
 	 *
 	 * @param  string $name
 	 * @param  array  $parameters
-	 * @return mixed
+	 * @return null|string
 	 */
 	public function callGroup($name, $parameters = array())
 	{

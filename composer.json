@@ -5,9 +5,9 @@
 	"license": "MIT",
 	"type": "project",
 	"require": {
-		"laravel/framework": "5.0.*@dev",
+		"laravel/framework": "5.0.*",
 		"caffeinated/modules": "1.0.*@dev",
-		"caffeinated/themes": "1.0.*@dev"
+		"caffeinated/themes": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

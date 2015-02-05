@@ -34,7 +34,7 @@ class HomeController extends Controller {
 	public function index()
 	{
 		View::share('title','Neveshtar - Open Source Laravel CMS');
-		return Theme::view('home');
+		return Theme::view('frontend/index-header-fix');
 	}
 
 }

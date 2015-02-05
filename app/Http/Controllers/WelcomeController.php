@@ -34,7 +34,7 @@ class WelcomeController extends Controller {
 	public function index()
 	{
 		View::share('title','Neveshtar - Open Source Laravel CMS');
-		return Theme::view('welcome');
+		return Theme::view('frontend/index-header-fix');
 	}
 
 }

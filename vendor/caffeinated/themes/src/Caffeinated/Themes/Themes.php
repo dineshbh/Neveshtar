@@ -1,7 +1,6 @@
 <?php
 namespace Caffeinated\Themes;
 
-use Caffeinated\Themes\Engines\Engine;
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Filesystem\Filesystem;
@@ -10,6 +9,16 @@ use Illuminate\View\Factory as ViewFactory;
 
 class Themes
 {
+	/**
+	 * @var string
+	 */
+	protected $active;
+
+	/**
+	 * @var array
+	 */
+	protected $components;
+
 	/**
 	 * @var Repository
 	 */
@@ -21,21 +30,6 @@ class Themes
 	protected $files;
 
 	/**
-	 * @var View
-	 */
-	protected $viewFactory;
-
-	/**
-	 * @var string
-	 */
-	protected $path;
-
-	/**
-	 * @var string
-	 */
-	protected $active;
-
-	/**
 	 * @var string
 	 */
 	protected $layout;
@@ -43,7 +37,12 @@ class Themes
 	/**
 	 * @var string
 	 */
-	protected $layoutView;
+	protected $path;
+
+	/**
+	 * @var View
+	 */
+	protected $viewFactory;
 
 	/**
 	 * Constructor method.
@@ -51,7 +50,6 @@ class Themes
 	 * @param Filesystem  $files
 	 * @param Repository  $config
 	 * @param ViewFactory $viewFactory
-	 * @param Engine      $engine
 	 */
 	public function __construct(Filesystem $files, Repository $config, ViewFactory $viewFactory)
 	{
@@ -150,7 +148,7 @@ class Themes
 	/**
 	 * Sets active theme.
 	 *
-	 * @return Self
+	 * @return Themes
 	 */
 	public function setActive($theme)
 	{
@@ -160,9 +158,19 @@ class Themes
 	}
 
 	/**
+	 * Get theme layout.
+	 *
+	 * @return string
+	 */
+	public function getLayout()
+	{
+		return $this->layout;
+	}
+
+	/**
 	 * Sets theme layout.
 	 *
-	 * @return Self
+	 * @return Themes
 	 */
 	public function setLayout($layout)
 	{
@@ -172,43 +180,29 @@ class Themes
 	}
 
 	/**
-	 * Setup layout.
-	 *
-	 * @return null
-	 */
-	protected function setupLayout()
-	{
-		if (! is_null($this->layout)) {
-			$this->layoutView = $this->viewFactory->make($this->layout);
-		}
-	}
-
-	/**
 	 * Render theme view file.
 	 *
 	 * @param string $view
 	 * @param array $data
-	 * @param array $mergeData
 	 * @return View
 	 */
 	public function view($view, $data = array())
 	{
-		$this->setupLayout();
+		$activeTheme   = $this->getActive();
+		$parent        = $this->getProperty($activeTheme.'::parent');
+		$viewNamespace = null;
 
-		$viewNamespace = $this->getThemeNamespace($view);
+		$views = [
+			'theme'  => $this->getThemeNamespace($view),
+			'parent' => $this->getThemeNamespace($view, $parent),
+			'module' => $this->getModuleView($view),
+			'base'   => $view
+		];
 
-		$this->autoloadComponents($this->getActive());
-
-		// Caffeinated Modules support
-		if (class_exists('Caffeinated\Modules\Modules')) {
-			if ( ! $this->viewFactory->exists($viewNamespace)) {
-				$viewSegments = explode('.', $view);
-
-				if ($viewSegments[0] == 'modules') {
-					$module        = $viewSegments[1];
-					$view          = implode('.', array_slice($viewSegments, 2));
-					$viewNamespace = "{$module}::{$view}";
-				}
+		foreach ($views as $view) {
+			if ($this->viewFactory->exists($view)) {
+				$viewNamespace = $view;
+				break;
 			}
 		}
 
@@ -224,12 +218,10 @@ class Themes
 	 */
 	protected function renderView($view, $data)
 	{
-		$engine = $this->config->get('caffeinated.themes.engine');
+		$this->autoloadComponents($this->getActive());
 
-		if (! is_null($this->layout) and $engine == 'blade') {
-			return $this->layoutView->nest('child', $view, $data);
-		} elseif(! is_null($this->layout) and $engine == 'twig') {
-			$data['layout'] = $this->layout;
+		if (! is_null($this->layout)) {
+			$data['theme_layout'] = $this->getLayout();
 		}
 
 		return $this->viewFactory->make($view, $data);
@@ -361,9 +353,13 @@ class Themes
 	 * @param string $key
 	 * @return string
 	 */
-	protected function getThemeNamespace($key)
+	protected function getThemeNamespace($key, $theme = null)
 	{
-		return $this->getActive()."::{$key}";
+		if (is_null($theme)) {
+			return $this->getActive()."::{$key}";
+		} else {
+			return $theme."::{$key}";
+		}		
 	}
 
 	/**
@@ -374,12 +370,45 @@ class Themes
 	 */
 	protected function autoloadComponents($theme)
 	{
+		$activeTheme        = $this->getActive();
 		$path               = $this->getPath();
+		$parent             = $this->getProperty($activeTheme.'::parent');
 		$themePath          = $path.'/'.$theme;
 		$componentsFilePath = $themePath.'/components.php';
+
+		if (! empty($parent)) {
+			$parentPath               = $path.'/'.$parent;
+			$parentComponentsFilePath = $parentPath.'/components.php';
+
+			if (file_exists($parentPath)) {
+				include ($parentComponentsFilePath);
+			}
+		}
 
 		if (file_exists($componentsFilePath)) {
 			include ($componentsFilePath);
 		}		
+	}
+
+	/**
+	 * Get module view file.
+	 *
+	 * @param  string $view
+	 * @return null|string
+	 */
+	protected function getModuleView($view)
+	{
+		if (class_exists('Caffeinated\Modules\Modules')) {
+			$viewSegments = explode('.', $view);
+
+			if ($viewSegments[0] == 'modules') {
+				$module = $viewSegments[1];
+				$view   = implode('.', array_slice($viewSegments, 2));
+
+				return "{$module}::{$view}";
+			}
+		}
+
+		return null;
 	}
 }

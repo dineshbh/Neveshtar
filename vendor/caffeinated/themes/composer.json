@@ -11,20 +11,17 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": ">=5.0.0",
-        "illuminate/filesystem": ">=5.0.0",
-        "illuminate/view": ">=5.0.0",
-        "illuminate/config": ">=5.0.0"
+        "illuminate/support": "~5.0",
+        "illuminate/filesystem": "~5.0",
+        "illuminate/view": "~5.0",
+        "illuminate/config": "~5.0"
     },
     "autoload": {
-        "psr-0": {
-            "Caffeinated\\Themes": "src/"
+        "psr-4": {
+            "Caffeinated\\Themes\\": "src/Caffeinated/Themes/"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    },
-    "minimum-stability": "dev"
+    "suggest": {
+        "rcrowe/twigBridge": "Allows the ability to utilize Twig as the templating engine"
+    }
 }

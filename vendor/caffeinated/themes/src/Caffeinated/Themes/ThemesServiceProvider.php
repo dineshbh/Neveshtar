@@ -1,8 +1,6 @@
 <?php
-
 namespace Caffeinated\Themes;
 
-use Caffeinated\Themes\Handlers\ThemesHandler;
 use Illuminate\Support\ServiceProvider;
 
 class ThemesServiceProvider extends ServiceProvider {
@@ -14,10 +12,15 @@ class ThemesServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
+	/**
+	 * Boot the service provider.
+	 *
+	 * @return null
+	 */
 	public function boot()
 	{
 		$this->publishes([
-			__DIR__.'/../../config/themes.php' => config_path('themes.php'),
+			__DIR__.'/../../config/themes.php' => config_path('themes.php')
 		]);
 	}
 
@@ -32,8 +35,6 @@ class ThemesServiceProvider extends ServiceProvider {
 		    __DIR__.'/../../config/themes.php', 'caffeinated.themes'
 		);
 
-		// $this->registerResources();
-
 		$this->registerServices();
 
 		$this->configureTwig();
@@ -42,7 +43,7 @@ class ThemesServiceProvider extends ServiceProvider {
 	/**
 	 * Get the services provided by the provider.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function provides()
 	{
@@ -56,18 +57,14 @@ class ThemesServiceProvider extends ServiceProvider {
 	 */
 	protected function registerServices()
 	{
+		$this->app->bindShared('themes.components', function($app) {
+			$blade = $app['view']->getEngineResolver()->resolve('blade')->getCompiler();
+
+			return new Components($app, $blade);
+		});
+
 		$this->app->bindShared('themes', function($app) {
 			return new Themes($app['files'], $app['config'], $app['view']);
-		});
-
-		$this->app->bindShared('themes.engine', function ($app) {
-			$engine = ucfirst($this->app['config']->get('themes.engine'));
-
-			return $app->make('\Caffeinated\Themes\Engines\\'.$engine.'Engine');
-		});
-
-		$this->app->bindShared('themes.components', function($app) {
-			return new Components($app, $app['themes.engine']);
 		});
 
 		$this->app->booting(function($app) {

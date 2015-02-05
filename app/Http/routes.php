@@ -19,3 +19,11 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+Route::group(array('middleware' => 'auth', 'prefix' => 'admin'), function()
+{
+    // Example route with an admin prefix
+    Route::get('/', array('uses' => 'Admin\AdminController@index'));
+    Route::get('/dashboard', array('uses' => 'Admin\DashboardController@index'));
+    Route::resource('categories', 'Admin\CategoriesController');
+});
